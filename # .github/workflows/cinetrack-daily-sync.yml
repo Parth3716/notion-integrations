@@ -1,0 +1,34 @@
+name: Daily Media Tracker Sync
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+      timezone: 'Asia/Kolkata'
+  workflow_dispatch:   # manual "Run workflow" button, for testing on demand
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests python-dotenv
+      - run: python -u cinetrack_daily_sync.py
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_LIFEOS_PAGE_ID: ${{ secrets.NOTION_LIFEOS_PAGE_ID }}
+          NOTION_MOVIES_DATA_SOURCE_ID: ${{ secrets.NOTION_MOVIES_DATA_SOURCE_ID }}
+          NOTION_SHOWS_DATA_SOURCE_ID: ${{ secrets.NOTION_SHOWS_DATA_SOURCE_ID }}
+          NOTION_EPISODES_DATA_SOURCE_ID: ${{ secrets.NOTION_EPISODES_DATA_SOURCE_ID }}
+      - name: Record run (keeps the 60-day auto-disable clock reset)
+        run: |
+          mkdir -p .sync-log
+          echo "Last run: $(date -u +"%Y-%m-%dT%H:%M:%SZ")" > .sync-log/last_run.txt
+          git config user.name "daily-sync-bot"
+          git config user.email "actions@github.com"
+          git add .sync-log/last_run.txt
+          git commit -m "sync: $(date -u +%F)" || echo "nothing to commit"
+          git push
