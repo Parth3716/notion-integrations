@@ -52,7 +52,19 @@ def get_checkbox(p, name):
     return p["properties"].get(name, {}).get("checkbox", False)
 
 def hr_min(total_minutes):
-    return f"{total_minutes // 60}h {total_minutes % 60}m"
+    if total_minutes < 60:
+        return f"{total_minutes}m"
+    total_hours = total_minutes // 60
+    minutes = total_minutes % 60
+    if total_hours < 24:
+        return f"{total_hours}h {minutes}m"
+    days = total_hours // 24
+    hours = total_hours % 24
+    if days < 365:
+        return f"{days}d {hours}h"
+    years = days // 365
+    remaining_days = days % 365
+    return f"{years}y {remaining_days}d"
 
 # --- Part 1: refresh metadata, add only-current-season missing episodes ---
 
