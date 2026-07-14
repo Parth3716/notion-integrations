@@ -26,6 +26,7 @@ jobs:
           NOTION_MOVIES_DATA_SOURCE_ID: ${{ secrets.NOTION_MOVIES_DATA_SOURCE_ID }}
           NOTION_SHOWS_DATA_SOURCE_ID: ${{ secrets.NOTION_SHOWS_DATA_SOURCE_ID }}
           NOTION_EPISODES_DATA_SOURCE_ID: ${{ secrets.NOTION_EPISODES_DATA_SOURCE_ID }}
+          NOTION_EPISODES_ARCHIVE_DATA_SOURCE_ID: ${{ secrets.NOTION_EPISODES_ARCHIVE_DATA_SOURCE_ID }}
       - name: Record run (keeps the 60-day auto-disable clock reset)
         run: |
           mkdir -p .sync-log
