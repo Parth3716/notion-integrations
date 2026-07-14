@@ -1,4 +1,5 @@
 import os, sys, json, requests
+from datetime import datetime, timezone, timedelta
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -33,7 +34,8 @@ def add_movie(d):
 
     properties = {
         "Name": {"title": [{"text": {"content": d["title"]}}]},
-        "Status": {"select": {"name": "Not Watched"}},
+        "Status": {"select": {"name": "Watched"}},
+        "Watched Date": {"date": {"start": datetime.now(timezone(timedelta(hours=5, minutes=30))).replace(microsecond=0).isoformat()}},
         "Genres": {"multi_select": [{"name": g["name"]} for g in d.get("genres", [])]},
         "Runtime (min)": {"number": d.get("runtime")},
         "Overview": {"rich_text": [{"text": {"content": d.get("overview", "")}}]},

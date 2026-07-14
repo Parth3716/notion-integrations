@@ -191,12 +191,6 @@ def update_stats_callouts():
             print(label, "->", stats[label])
 
 def archive_finished_shows():
-    """Move episodes of shows that are Ended/Canceled and fully watched into
-    Episodes Archive, freeze their stats on the Show page, then trash the
-    live episode rows. Resumable: if this crashes partway through a show,
-    the next run only sees the episodes still left (trashed ones drop out
-    of the query), so it won't duplicate — but if a crash happens mid-show,
-    double check that show's frozen totals afterward before trusting them."""
     shows = query_all(SHOWS_DS)
     for show in shows:
         if get_checkbox(show, "Is Archived"):
